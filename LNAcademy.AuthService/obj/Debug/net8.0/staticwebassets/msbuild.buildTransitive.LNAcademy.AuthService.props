@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/LNAcademy.AuthService.props" />
+</Project>
