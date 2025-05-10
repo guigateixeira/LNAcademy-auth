@@ -99,5 +99,44 @@ namespace LNAcademy.AuthService.Services
                 User = user
             };
         }
+        
+        public async Task<UserDTO> GetUserAsync(GetUserRequest request)
+        {
+            User? user = null;
+
+            // Check if we have an ID
+            if (request.Id.HasValue)
+            {
+                user = await _userRepository.GetByIdAsync(request.Id.Value);
+            }
+            // Otherwise try to find by email
+            else if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                user = await _userRepository.GetByEmailAsync(request.Email);
+            }
+            else
+            {
+                _logger.LogWarning("GetUserAsync called with neither ID nor email");
+                throw new AuthError(
+                    "INVALID_REQUEST", 
+                    400
+                );
+            }
+
+            // User not found
+            if (user == null)
+            {
+                _logger.LogWarning($"User not found. ID: {request.Id}, Email: {request.Email}");
+                return null;
+            }
+
+            // Return user DTO
+            return new UserDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt
+            };
+        }
     }
 }
