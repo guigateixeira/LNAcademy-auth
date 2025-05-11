@@ -3,6 +3,7 @@ using System;
 using LNAcademy.AuthService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LNAcademy.AuthService.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511031632_CreateProductsSchema")]
+    partial class CreateProductsSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,10 +108,8 @@ namespace LNAcademy.AuthService.Migrations
                         .HasColumnType("text")
                         .HasColumnName("title");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
                         .HasColumnName("type");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -196,10 +197,8 @@ namespace LNAcademy.AuthService.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("creator_id");
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                    b.Property<int>("Currency")
+                        .HasColumnType("integer")
                         .HasColumnName("currency");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -224,10 +223,8 @@ namespace LNAcademy.AuthService.Migrations
                         .HasColumnType("text")
                         .HasColumnName("title");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
                         .HasColumnName("type");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -242,7 +239,7 @@ namespace LNAcademy.AuthService.Migrations
 
                     b.ToTable("products", (string)null);
 
-                    b.HasDiscriminator<string>("Type");
+                    b.HasDiscriminator<int>("Type");
 
                     b.UseTphMappingStrategy();
                 });
@@ -278,7 +275,7 @@ namespace LNAcademy.AuthService.Migrations
 
                     b.ToTable("products", (string)null);
 
-                    b.HasDiscriminator().HasValue("Book");
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("Course", b =>
@@ -292,7 +289,7 @@ namespace LNAcademy.AuthService.Migrations
 
                     b.ToTable("products", (string)null);
 
-                    b.HasDiscriminator().HasValue("Course");
+                    b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("Lesson", b =>
