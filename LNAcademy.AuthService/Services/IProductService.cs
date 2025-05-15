@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using LNAcademy.AuthService.Repositories;
 
@@ -40,9 +41,16 @@ namespace LNAcademy.AuthService.Services
 
         public class CreateProductRequest
         {
+            [Required(ErrorMessage = "Title is required")]
             public string Title { get; set; }
+    
+            [Required(ErrorMessage = "Description is required")]
             public string Description { get; set; }
+    
+            [Required(ErrorMessage = "Price is required")]
+            [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero")]
             public decimal Price { get; set; }
+            [Required(ErrorMessage = "Currency is required")]
             public string Currency { get; set; } = "SATS";
             public bool IsPublished { get; set; } = false;
             public string? CoverImageUrl { get; set; }
@@ -58,8 +66,8 @@ namespace LNAcademy.AuthService.Services
             public string Author { get; set; }
             public string? Language { get; set; }
             public string? Format { get; set; }
-            public string PreviewUrl { get; set; }
-            public string DownloadUrl { get; set; }
+            public string? PreviewUrl { get; set; }
+            public string? DownloadUrl { get; set; }
         }
 
         public class UpdateProductRequest
@@ -108,5 +116,6 @@ namespace LNAcademy.AuthService.Services
         Task<BookDTO> CreateBookAsync(CreateBookRequest request, Guid creatorId);
         Task<BookDTO> UpdateBookAsync(Guid id, UpdateBookRequest request, Guid userId);
         Task<bool> DeleteBookAsync(Guid id, Guid userId);
+        Task<BookDTO> PublishBookAsync(Guid bookId, Guid userId);
     }
 }

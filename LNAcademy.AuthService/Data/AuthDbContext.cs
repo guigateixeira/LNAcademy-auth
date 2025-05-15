@@ -50,6 +50,8 @@ namespace LNAcademy.AuthService.Data
                 entity.Property(p => p.Currency)
                     .HasConversion<string>()
                     .HasMaxLength(50);
+
+                entity.Property(p => p.CoverImageUrl).IsRequired(false);
                 
                 // Configure inheritance
                 entity.HasDiscriminator(p => p.Type)
@@ -68,6 +70,12 @@ namespace LNAcademy.AuthService.Data
             
             // Book configuration (inherits from Product)
             modelBuilder.Entity<Book>().ToTable("products");
+            modelBuilder.Entity<Book>(entity =>
+            {
+                // Make PreviewUrl and DownloadUrl optional
+                entity.Property(b => b.PreviewUrl).IsRequired(false);
+                entity.Property(b => b.DownloadUrl).IsRequired(false);
+            });
             
             // Module configuration
             modelBuilder.Entity<Module>().ToTable("modules");

@@ -7,21 +7,23 @@ public class Book : Product
     {
         Type = ProductType.Book;
     }
-    
+
     [Column("author")]
     public string Author { get; set; }
-    
+
     [Column("language")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Language is optional")]
     public string Language { get; set; }
-    
+
     [Column("format")]
     [Required(AllowEmptyStrings = false, ErrorMessage = "Format is optional")]
     public string? Format { get; set; }
-    
+
     [Column("download_url")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Format is optional")]
     public string DownloadUrl { get; set; }
-    
+
     [Column("preview_url")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Format is optional")]
     public string PreviewUrl { get; set; }
 }

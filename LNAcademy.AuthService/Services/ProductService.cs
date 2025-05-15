@@ -61,6 +61,44 @@ namespace LNAcademy.AuthService.Services
             
             return await GetAllProductsAsync(filterParams);
         }
+        
+        public async Task<IProductService.BookDTO> PublishBookAsync(Guid bookId, Guid userId)
+        {
+            // Get the book
+            var book = await _productRepository.GetBookByIdAsync(bookId);
+            if (book == null)
+            {
+                _logger.LogWarning($"Book with ID {bookId} not found");
+                throw new ProductNotFoundException($"Book with ID {bookId} not found");
+            }
+
+            // Check ownership
+            if (book.CreatorId != userId)
+            {
+                _logger.LogWarning($"User {userId} tried to publish book {bookId} without permission");
+                throw new UnauthorizedException("You don't have permission to publish this book");
+            }
+
+            // Check if the book has the required fields
+            if (string.IsNullOrWhiteSpace(book.DownloadUrl))
+            {
+                throw new ValidationException("Book must have a download URL to be published", "DOWNLOAD_URL_REQUIRED");
+            }
+    
+            if (string.IsNullOrWhiteSpace(book.PreviewUrl))
+            {
+                throw new ValidationException("Book must have a preview URL to be published", "PREVIEW_URL_REQUIRED");
+            }
+
+            // Set as published
+            book.IsPublished = true;
+            book.UpdatedAt = DateTime.UtcNow;
+
+            // Update in database
+            book = await _productRepository.UpdateBookAsync(book);
+    
+            return MapToBookDTO(book);
+        }
 
         #endregion
 

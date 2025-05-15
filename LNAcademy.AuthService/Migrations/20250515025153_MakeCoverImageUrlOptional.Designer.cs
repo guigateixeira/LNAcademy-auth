@@ -3,6 +3,7 @@ using System;
 using LNAcademy.AuthService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LNAcademy.AuthService.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    partial class AuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515025153_MakeCoverImageUrlOptional")]
+    partial class MakeCoverImageUrlOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +259,7 @@ namespace LNAcademy.AuthService.Migrations
                         .HasColumnName("author");
 
                     b.Property<string>("DownloadUrl")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("download_url");
 
@@ -270,6 +274,7 @@ namespace LNAcademy.AuthService.Migrations
                         .HasColumnName("language");
 
                     b.Property<string>("PreviewUrl")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("preview_url");
 

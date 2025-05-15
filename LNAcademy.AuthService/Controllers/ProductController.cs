@@ -363,5 +363,34 @@ namespace LNAcademy.AuthService.Controllers
                 return StatusCode(500, new { message = "An error occurred while deleting the book" });
             }
         }
+        
+        [HttpPost("{id}/publish")]
+        [Authorize]
+        public async Task<IActionResult> PublishBook(Guid id)
+        {
+            try
+            {
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var book = await _productService.PublishBookAsync(id, userId);
+                return Ok(book);
+            }
+            catch (ProductNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (UnauthorizedException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message, errorCode = ex.ErrorCode });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error publishing book {id}");
+                return StatusCode(500, new { message = "An error occurred while publishing the book" });
+            }
+        }
     }
 }
